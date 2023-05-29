@@ -47,22 +47,25 @@ public class Generator {
 
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        String projectPath = System.getProperty("user.dir") ;
+        String projectPath = "D:\\mybatisPlusGenerator" ;
         gc.setOutputDir(projectPath + "/src/main/java");
-        gc.setAuthor("maqh");
-        gc.setOpen(false);
-        gc.setFileOverride(true);//是否覆盖文件
+        gc.setServiceName("%sService");//设置生产service名称不以I开头，默认为IService
+        gc.setAuthor("liyonli");
+        gc.setFileOverride(true);//是否覆盖文件 默认false
         gc.setBaseResultMap(true); // xml resultmap
         gc.setBaseColumnList(true); // xml columlist
         gc.setSwagger2(true);  //实体属性 Swagger2 注解
+        gc.setOpen(false);
+        gc.setBaseResultMap(false); // mapper.xml 生成 ResultMap
+        gc.setBaseColumnList(false); // mapper.xml 生成 ColumnList
         mpg.setGlobalConfig(gc);
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://192.168.1.230:3306/bim?&characterEncoding=utf8&useSSL=false&serverTimezone=UTC");
+        dsc.setUrl("jdbc:mysql://192.168.100.212:3306/scmtms_bbk?&characterEncoding=utf8&useSSL=false&serverTimezone=UTC");
         dsc.setDriverName("com.mysql.jdbc.Driver");
-        dsc.setUsername("root");
-        dsc.setPassword("123456");
+        dsc.setUsername("quantum");
+        dsc.setPassword("CS212SJK");
         dsc.setTypeConvert(new MySqlTypeConvert(){
             // 自定义数据库表字段类型转换【可选】
             @Override
@@ -77,15 +80,16 @@ public class Generator {
         mpg.setDataSource(dsc);
 
         // 包配置
-        PackageConfig pc = new PackageConfig();
-        String packgeName = scanner("包名");
-        pc.setParent("com.maqh.demo");
-        pc.setController("controller."+packgeName);
-        pc.setEntity("domain." + packgeName);
-        pc.setService("service." + packgeName);
-        pc.setServiceImpl("service." + packgeName +".impl");
-        pc.setMapper("dao." + packgeName);
-        mpg.setPackageInfo(pc);
+          PackageConfig pc = new PackageConfig();
+//        String packgeName = scanner("包名");
+//        pc.setModuleName("api.tms");
+          pc.setParent("com.maqh.demo");
+//        pc.setController("controller."+packgeName);
+//        pc.setEntity("domain." + packgeName);
+//        pc.setService("service." + packgeName);
+//        pc.setServiceImpl("service." + packgeName +".impl");
+//        pc.setMapper("dao." + packgeName);
+          mpg.setPackageInfo(pc);
 
         // 自定义配置
         InjectionConfig cfg = new InjectionConfig() {
@@ -105,16 +109,23 @@ public class Generator {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return projectPath + "/src/main/resources/mapper/" + packgeName
+//                return projectPath + "/src/main/resources/mapper/" + packgeName
+//                        + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
+                return projectPath + "/src/main/resources/mapper/"
                         + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });
 
         cfg.setFileOutConfigList(focList);
         mpg.setCfg(cfg);
+//        // 选择 freemarker 引擎需要指定如下加，注意 pom 依赖必须有！
+//        mpg.setTemplateEngine(new FreemarkerTemplateEngine());
+//        mpg.execute();
 
         // 配置模板
         TemplateConfig templateConfig = new TemplateConfig();
+        //去掉设置mapper.xml文件默认在mapper目录下
+        templateConfig.setXml(null);
         mpg.setTemplate(templateConfig);
 
         // 策略配置

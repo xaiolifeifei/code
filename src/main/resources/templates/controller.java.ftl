@@ -35,7 +35,7 @@ import ${superControllerClassPackage};
 <#else>
 @Controller
 </#if>
-@RequestMapping("<#if package.ModuleName??>/${package.ModuleName}</#if>/<#if controllerMappingHyphenStyle??>${controllerMappingHyphen}<#else>${table.entityPath}</#if>")
+@RequestMapping("api/tms/${entity?uncap_first}")
 <#if kotlin>
 class ${table.controllerName}<#if superControllerClass??>:${superControllerClass}()</#if>
 <#else>
@@ -46,25 +46,25 @@ class ${table.controllerName}<#if superControllerClass??>:${superControllerClass
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Resource
-    private ${table.serviceName} ${(table.serviceName?substring(1))?uncap_first};
+    private ${table.serviceName} ${(table.serviceName)?uncap_first};
 
 
     @ApiOperation(value = "新增${table.comment!}")
-    @PostMapping()
+    @PostMapping("/page")
     public int add(@RequestBody ${entity} ${entity?uncap_first}){
-        return ${(table.serviceName?substring(1))?uncap_first}.add(${entity?uncap_first});
+        return ${(table.serviceName)?uncap_first}.add(${entity?uncap_first});
     }
 
     @ApiOperation(value = "删除${table.comment!}")
-    @DeleteMapping("{id}")
+    @PostMapping("/delete")
     public int delete(@PathVariable("id") Long id){
-        return ${(table.serviceName?substring(1))?uncap_first}.delete(id);
+        return ${(table.serviceName)?uncap_first}.delete(id);
     }
 
     @ApiOperation(value = "更新${table.comment!}")
-    @PutMapping()
+    @PostMapping("/update")
     public int update(@RequestBody ${entity} ${entity?uncap_first}){
-        return ${(table.serviceName?substring(1))?uncap_first}.updateData(${entity?uncap_first});
+        return ${(table.serviceName)?uncap_first}.updateData(${entity?uncap_first});
     }
 
     @ApiOperation(value = "查询${table.comment!}分页数据")
@@ -72,16 +72,16 @@ class ${table.controllerName}<#if superControllerClass??>:${superControllerClass
         @ApiImplicitParam(name = "page", value = "页码"),
         @ApiImplicitParam(name = "pageCount", value = "每页条数")
     })
-    @GetMapping()
+    @PostMapping("/query")
     public IPage<${entity}> findListByPage(@RequestParam Integer page,
                                    @RequestParam Integer pageCount){
-        return ${(table.serviceName?substring(1))?uncap_first}.findListByPage(page, pageCount);
+        return ${(table.serviceName)?uncap_first}.findListByPage(page, pageCount);
     }
 
     @ApiOperation(value = "id查询${table.comment!}")
-    @GetMapping("{id}")
+    @PostMapping("/getById")
     public ${entity} findById(@PathVariable Long id){
-        return ${(table.serviceName?substring(1))?uncap_first}.findById(id);
+        return ${(table.serviceName)?uncap_first}.findById(id);
     }
 
 }

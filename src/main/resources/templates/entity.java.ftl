@@ -3,6 +3,7 @@ package ${package.Entity};
 <#list table.importPackages as pkg>
 import ${pkg};
 </#list>
+import com.baomidou.mybatisplus.annotation.TableName;
 <#if swagger2>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -30,9 +31,9 @@ import lombok.experimental.Accessors;
     </#if>
 @Accessors(chain = true)
 </#if>
-<#if table.convert>
+<#--<#if table.convert>-->
 @TableName("${table.name}")
-</#if>
+<#--</#if>-->
 <#if swagger2>
 @ApiModel(value="${entity}对象", description="${table.comment!}")
 </#if>
